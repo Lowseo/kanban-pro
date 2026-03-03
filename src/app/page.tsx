@@ -1,4 +1,3 @@
-import Card from "@/components/board/Card";
 import Column from "@/components/board/Column";
 import AppLayout from "@/components/layout/AppLayout";
 import { Task } from "@/types";
@@ -53,38 +52,11 @@ export default function Home() {
   return (
     <AppLayout>
       <h2 className="text-2xl font-semibold mb-3 p-3">My Board</h2>
+
       <div className="flex gap-6 overflow-x-auto pb-4 ml-2">
-        <div className="bg-gray-400 flex flex-col w-[320px] p-3 rounded-2xl">
-          <h2 className="text-left">TO-DO</h2>
-          <h3 className="text-left font-bold mb-3">
-            Количество задач: {todoTasks.length}
-          </h3>
-          <Card tasks={[...todoTasks]} />
-          <button className="mt-3 w-full p-3 bg-gray-200 hover:bg-gray-300 rounded cursor-pointer font-bold">
-            Add Card
-          </button>
-        </div>
-        <div className="bg-gray-400 flex flex-col w-[320px] p-3 rounded-2xl">
-          <h2 className="text-left">IN-PROGRESS</h2>
-          <h3 className="text-left font-bold mb-3">
-            Количество задач: {inProgressTasks.length}
-          </h3>
-          <Card tasks={[...inProgressTasks]} />
-          <button className="mt-3 w-full p-3 bg-gray-200 hover:bg-gray-300 rounded cursor-pointer font-bold">
-            Add Card
-          </button>
-        </div>
-        <div className="bg-gray-400 flex flex-col w-[320px] p-3 rounded-2xl">
-          <h2 className="text-left">DONE</h2>
-          <h3 className="text-left font-bold mb-3">
-            Количество задач: {doneTasks.length}
-          </h3>
-          <Card tasks={[...doneTasks]} />
-          <button className="mt-3 w-full p-3 bg-gray-200 hover:bg-gray-300 rounded cursor-pointer font-bold">
-            Add Card
-          </button>
-        </div>
-        {/* <Card tasks={[...arrayData]} /> */}
+        <Column title="TO-DO" tasks={todoTasks} />
+        <Column title="DONE" tasks={doneTasks} />
+        <Column title="In-PROGRESS" tasks={inProgressTasks} />
       </div>
     </AppLayout>
   );
