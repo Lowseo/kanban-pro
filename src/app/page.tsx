@@ -1,6 +1,12 @@
+"use client";
+
 import Column from "@/components/board/Column";
+import TaskForm from "@/components/board/TaskForm";
 import AppLayout from "@/components/layout/AppLayout";
+import Modal from "@/components/ui/Modal";
 import { Task } from "@/types";
+
+import { useState } from "react";
 
 export default function Home() {
   const arrayData: Task[] = [
@@ -44,20 +50,46 @@ export default function Home() {
       status: "done",
     },
   ];
+  const [isOpen, setIsOpen] = useState(false);
+  const [tasks, setTasks] = useState<Task[]>(arrayData);
 
-  const todoTasks = arrayData.filter((t) => t.status === "todo");
-  const doneTasks = arrayData.filter((t) => t.status === "done");
-  const inProgressTasks = arrayData.filter((t) => t.status === "in-progress");
+  const onAddCard = () => {
+    setIsOpen(true);
+  };
+
+  const handleCreateTask = (formData: Omit<Task, "id">) => {
+    let newTask = {
+      ...formData,
+      id: Date.now(),
+    };
+    setTasks([...tasks, newTask]);
+    setIsOpen(false);
+    // 1. Добавь id к formData
+    // 2. Добавь в массив: setTasks([...tasks, newTask])
+    // 3. Закрой модалку: setIsOpen(false)
+  };
+
+  const todoTasks = tasks.filter((t) => t.status === "todo");
+  const doneTasks = tasks.filter((t) => t.status === "done");
+  const inProgressTasks = tasks.filter((t) => t.status === "in-progress");
 
   return (
     <AppLayout>
       <h2 className="text-2xl font-semibold mb-3 p-3">My Board</h2>
 
       <div className="flex gap-6 overflow-x-auto pb-4 ml-2">
-        <Column title="TO-DO" tasks={todoTasks} />
-        <Column title="DONE" tasks={doneTasks} />
-        <Column title="In-PROGRESS" tasks={inProgressTasks} />
+        <Column title="TO-DO" tasks={todoTasks} onAddCard={onAddCard} />
+        <Column title="DONE" tasks={doneTasks} onAddCard={onAddCard} />
+        <Column
+          title="In-PROGRESS"
+          tasks={inProgressTasks}
+          onAddCard={onAddCard}
+        />
       </div>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <TaskForm onSubmit={handleCreateTask} />
+        <button onClick={() => setIsOpen(false)}>Закрыть</button>
+      </Modal>
     </AppLayout>
   );
 }
