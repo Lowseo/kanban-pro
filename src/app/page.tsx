@@ -64,26 +64,38 @@ export default function Home() {
     };
     setTasks([...tasks, newTask]);
     setIsOpen(false);
-    // 1. Добавь id к formData
-    // 2. Добавь в массив: setTasks([...tasks, newTask])
-    // 3. Закрой модалку: setIsOpen(false)
   };
 
   const todoTasks = tasks.filter((t) => t.status === "todo");
   const doneTasks = tasks.filter((t) => t.status === "done");
   const inProgressTasks = tasks.filter((t) => t.status === "in-progress");
 
+  const deleteTask = (id: number) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  };
+
   return (
     <AppLayout>
       <h2 className="text-2xl font-semibold mb-3 p-3">My Board</h2>
 
       <div className="flex gap-6 overflow-x-auto pb-4 ml-2">
-        <Column title="TO-DO" tasks={todoTasks} onAddCard={onAddCard} />
-        <Column title="DONE" tasks={doneTasks} onAddCard={onAddCard} />
+        <Column
+          title="TO-DO"
+          tasks={todoTasks}
+          onAddCard={onAddCard}
+          deleteTask={deleteTask}
+        />
+        <Column
+          title="DONE"
+          tasks={doneTasks}
+          onAddCard={onAddCard}
+          deleteTask={deleteTask}
+        />
         <Column
           title="In-PROGRESS"
           tasks={inProgressTasks}
           onAddCard={onAddCard}
+          deleteTask={deleteTask}
         />
       </div>
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>

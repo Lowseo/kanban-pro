@@ -5,16 +5,23 @@ interface ColumnProps {
   title: string;
   tasks: Task[];
   onAddCard: () => void;
+  deleteTask: (id: number) => void;
 }
 
-export default function Column({ title, tasks, onAddCard }: ColumnProps) {
+export default function Column({
+  title,
+  tasks,
+  onAddCard,
+  deleteTask,
+}: ColumnProps) {
   return (
     <div className="bg-gray-200 rounded-lg w-80 p-4">
       <h2 className="font-bold">{title}</h2>
       <p>Количество задач: {tasks.length}</p>
       {tasks.map((task) => (
-        <Card key={task.id} task={task} />
+        <Card key={task.id} task={task} deleteTask={deleteTask} />
       ))}
+
       <button
         className="mt-3 w-full p-3 bg-gray-100 hover:bg-gray-300 rounded cursor-pointer font-bold"
         onClick={onAddCard}
