@@ -6,6 +6,7 @@ interface ColumnProps {
   tasks: Task[];
   onAddCard: () => void;
   deleteTask: (id: number) => void;
+  editTask: (task: Task) => void;
 }
 
 export default function Column({
@@ -13,13 +14,19 @@ export default function Column({
   tasks,
   onAddCard,
   deleteTask,
+  editTask,
 }: ColumnProps) {
   return (
     <div className="bg-gray-200 rounded-lg w-80 p-4">
       <h2 className="font-bold">{title}</h2>
       <p>Количество задач: {tasks.length}</p>
       {tasks.map((task) => (
-        <Card key={task.id} task={task} deleteTask={deleteTask} />
+        <Card
+          key={task.id}
+          task={task}
+          deleteTask={deleteTask}
+          editTask={editTask}
+        />
       ))}
 
       <button

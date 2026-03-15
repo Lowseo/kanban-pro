@@ -53,16 +53,29 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [tasks, setTasks] = useState<Task[]>(arrayData);
 
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+
   const onAddCard = () => {
     setIsOpen(true);
   };
 
   const handleCreateTask = (formData: Omit<Task, "id">) => {
-    let newTask = {
-      ...formData,
-      id: Date.now(),
-    };
-    setTasks([...tasks, newTask]);
+    if (editingTask !== null) {
+      // Обновляем существующую задачу
+      setTasks(
+        tasks.map(
+          (task) =>
+            task.id === editingTask.id
+              ? { ...formData, id: editingTask.id } // ← Обновлённая задача
+              : task, // ← Остальные без изменений
+        ),
+      );
+    } else {
+      // Создаём новую задачу
+      const newTask = { ...formData, id: Date.now() };
+      setTasks([...tasks, newTask]);
+    }
+    setEditingTask(null);
     setIsOpen(false);
   };
 
@@ -74,9 +87,20 @@ export default function Home() {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   };
 
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task); // ← Сохраняем задачу в стейт
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setEditingTask(null);
+  };
+
   return (
     <AppLayout>
       <h2 className="text-2xl font-semibold mb-3 p-3">My Board</h2>
+      {editingTask && <p>Редактируем: {editingTask.title}</p>}
 
       <div className="flex gap-6 overflow-x-auto pb-4 ml-2">
         <Column
@@ -84,23 +108,31 @@ export default function Home() {
           tasks={todoTasks}
           onAddCard={onAddCard}
           deleteTask={deleteTask}
+          editTask={handleEditTask}
         />
         <Column
           title="DONE"
           tasks={doneTasks}
           onAddCard={onAddCard}
           deleteTask={deleteTask}
+          editTask={handleEditTask}
         />
         <Column
           title="In-PROGRESS"
           tasks={inProgressTasks}
           onAddCard={onAddCard}
           deleteTask={deleteTask}
+          editTask={handleEditTask}
         />
       </div>
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <TaskForm onSubmit={handleCreateTask} />
-        <button onClick={() => setIsOpen(false)}>Закрыть</button>
+      <Modal isOpen={isOpen} onClose={handleClose}>
+        <TaskForm onSubmit={handleCreateTask} initialData={editingTask} />
+        <button
+          onClick={handleClose}
+          className="p-3 bg-red-500 text-white flex justify-center items-center rounded-2xl font-bold w-100 cursor-pointer hover:bg-red-700 duration-500"
+        >
+          Закрыть
+        </button>
       </Modal>
     </AppLayout>
   );

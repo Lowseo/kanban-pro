@@ -3,9 +3,10 @@ import { Task } from "@/types";
 interface CardProps {
   task: Task;
   deleteTask: (id: number) => void;
+  editTask: (task: Task) => void;
 }
 
-export default function Card({ task, deleteTask }: CardProps) {
+export default function Card({ task, deleteTask, editTask }: CardProps) {
   return (
     <div>
       <ul>
@@ -23,10 +24,16 @@ export default function Card({ task, deleteTask }: CardProps) {
           <p className="mb-2 text-center">{task.description}</p>
 
           <button
-            className="bg-red-400 text-white p-2 rounded-2xl cursor-pointer mt-1 font-bold hover:bg-red-500 duration-300"
+            className="w-full bg-red-400 text-white p-2 rounded-2xl cursor-pointer mt-1 font-bold hover:bg-red-500 duration-300"
             onClick={() => deleteTask(task.id)}
           >
             Delete
+          </button>
+          <button
+            className="w-full bg-blue-400 text-white p-2 rounded-2xl cursor-pointer mt-1 font-bold hover:bg-blue-500 duration-300"
+            onClick={() => editTask(task)}
+          >
+            Edit
           </button>
         </li>
       </ul>
